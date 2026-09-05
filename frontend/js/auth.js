@@ -4,6 +4,8 @@ const resetForm = document.getElementById("resetForm");
 const authTitle = document.getElementById("authTitle");
 const authSubtitle = document.getElementById("authSubtitle");
 const authMessage = document.getElementById("authMessage");
+const lampToggle = document.getElementById("lampToggle");
+const lampCordHit = document.getElementById("lampCordHit");
 
 function getPasswordStrength(password) {
     return [
@@ -30,6 +32,14 @@ function updatePasswordStrength(inputId, barId, textId) {
 function showMessage(message, type = "") {
     authMessage.textContent = message;
     authMessage.className = `auth-message ${type}`;
+}
+
+function toggleLamp() {
+    const isOn = document.body.dataset.lampOn === "true";
+    document.body.dataset.lampOn = String(!isOn);
+    lampToggle.textContent = isOn
+        ? "Pull the cord to turn on the light"
+        : "Pull the cord to turn off the light";
 }
 
 function setMode(mode) {
@@ -122,3 +132,6 @@ document.querySelectorAll(".auth-tab").forEach(tab => {
 
 document.getElementById("forgotLink").addEventListener("click", () => setMode("reset"));
 document.getElementById("backToLogin").addEventListener("click", () => setMode("login"));
+
+lampToggle.addEventListener("click", toggleLamp);
+lampCordHit.addEventListener("click", toggleLamp);

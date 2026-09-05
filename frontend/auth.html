@@ -1,68 +1,846 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus - Account</title>
-    <link rel="stylesheet" href="/css/auth.css">
+
+
+<title>Nexus - Account</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/css/auth.css">
+
+<style>
+    :root {
+        --bg-color: #121417;
+        --lamp-matte: #e8e2d9;
+        --lamp-shade: #f5f0e6;
+        --lamp-base: #d1ccc2;
+        --glow-color: rgba(255, 214, 110, 0.3);
+        --accent-color: #d4a373;
+        --on: 0;
+        --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: var(--bg-color);
+        margin: 0;
+        padding: 30px;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        overflow-x: hidden;
+        transition: background var(--transition);
+        color: white;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+            radial-gradient(
+                circle at 50% 40%,
+                var(--glow-color),
+                transparent 70%
+            );
+        opacity: var(--on);
+        transition: opacity var(--transition);
+        pointer-events: none;
+    }
+
+    .auth-shell {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 1050px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 70px;
+    }
+
+    /* =========================
+       BRAND / INTRO
+    ========================= */
+
+    .auth-intro {
+        width: 420px;
+        text-align: center;
+    }
+
+    .brand {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: 0.35em;
+    }
+
+    .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent-color);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+    }
+
+    .auth-intro h1 {
+        margin: 0 auto 14px;
+        max-width: 390px;
+        color: white;
+        font-size: clamp(2rem, 4vw, 3rem);
+        line-height: 1.05;
+        font-weight: 500;
+    }
+
+    .intro-copy {
+        margin: 0 auto;
+        max-width: 370px;
+        color: #999;
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    .intro-note {
+        display: block;
+        margin-top: 22px;
+        color: #666;
+        font-size: 0.78rem;
+    }
+
+    /* =========================
+       LAMP
+    ========================= */
+
+    .lamp-scene {
+        position: relative;
+        width: 280px;
+        height: 390px;
+        margin: 0 auto 15px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .lamp-glow {
+        position: absolute;
+        top: 65px;
+        width: 230px;
+        height: 230px;
+        border-radius: 50%;
+        background: rgba(255, 214, 110, 0.2);
+        filter: blur(45px);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+    }
+
+    body[data-lamp-on="true"] .lamp-glow {
+        opacity: 1;
+    }
+
+    .lamp-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+
+    .lamp-shade {
+        fill: var(--lamp-shade);
+        transition: fill var(--transition);
+    }
+
+    body[data-lamp-on="true"] .lamp-shade {
+        fill: #fff;
+        filter: drop-shadow(0 0 30px rgba(255, 255, 200, 0.45));
+    }
+
+    .lamp-base {
+        fill: var(--lamp-base);
+    }
+
+    .lamp-inner-glow {
+        fill: #ffdb8a;
+        opacity: 0;
+        transition: opacity var(--transition);
+        filter: blur(15px);
+    }
+
+    body[data-lamp-on="true"] .lamp-inner-glow {
+        opacity: 0.6;
+    }
+
+    .lamp-cord {
+        stroke: #555;
+        stroke-width: 2;
+    }
+
+    .lamp-bead {
+        fill: var(--accent-color);
+    }
+
+    .lamp-cord-hit {
+        cursor: grab;
+    }
+
+    .lamp-cord-hit:active {
+        cursor: grabbing;
+    }
+
+    .lamp-toggle {
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: none;
+        background: transparent;
+        color: #777;
+        font: inherit;
+        font-size: 0.75rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 0.3s ease;
+    }
+
+    .lamp-toggle:hover {
+        color: #fff;
+    }
+
+    /* =========================
+       AUTH PANEL
+    ========================= */
+
+    .auth-panel {
+        width: 350px;
+        padding: 2.5rem;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+        opacity: 0;
+        transform: translateY(30px);
+        pointer-events: none;
+
+        transition:
+            opacity 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+            transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    body[data-lamp-on="true"] .auth-panel {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .auth-panel-header {
+        text-align: center;
+    }
+
+    .panel-kicker {
+        color: var(--accent-color);
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+    }
+
+    .auth-panel h2 {
+        margin: 8px 0 8px;
+        color: white;
+        font-size: 1.55rem;
+        font-weight: 500;
+    }
+
+    .auth-panel-header p {
+        margin: 0 0 22px;
+        color: #888;
+        font-size: 0.85rem;
+    }
+
+    /* =========================
+       TABS
+    ========================= */
+
+    .auth-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        margin-bottom: 20px;
+        padding: 4px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .auth-tab {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 6px;
+        background: transparent;
+        color: #777;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.8rem;
+        transition: 0.3s;
+    }
+
+    .auth-tab.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    /* =========================
+       FORMS
+    ========================= */
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .auth-form.hidden {
+        display: none;
+    }
+
+    .auth-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        color: #999;
+        font-size: 0.78rem;
+    }
+
+    .auth-form input {
+        width: 100%;
+        padding: 13px 15px;
+        border: 1px solid transparent;
+        border-radius: 14px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.07);
+        color: white;
+        font: inherit;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+
+    .auth-form input::placeholder {
+        color: #555;
+    }
+
+    .auth-form input:focus {
+        border-color: var(--accent-color);
+        background: rgba(255, 255, 255, 0.11);
+    }
+
+    .auth-submit {
+        width: 100%;
+        padding: 14px;
+        margin-top: 5px;
+        border: none;
+        border-radius: 15px;
+        background: linear-gradient(
+            135deg,
+            #bf953f,
+            #fcf6ba,
+            #b38728,
+            #fcf6ba,
+            #aa771c
+        );
+        color: #121417;
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .auth-submit:hover {
+        transform: scale(1.02);
+    }
+
+    .auth-submit:disabled {
+        opacity: 0.6;
+        cursor: wait;
+        transform: none;
+    }
+
+    .text-button {
+        border: none;
+        background: transparent;
+        color: #777;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.75rem;
+        transition: color 0.3s;
+    }
+
+    .text-button:hover {
+        color: white;
+    }
+
+    /* =========================
+       PASSWORD STRENGTH
+    ========================= */
+
+    .password-strength {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .strength-track {
+        height: 4px;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .strength-track span {
+        display: block;
+        width: 0;
+        height: 100%;
+        transition: width 0.3s ease;
+    }
+
+    .password-strength span:last-child {
+        color: #666;
+        font-size: 0.68rem;
+    }
+
+    .form-note {
+        margin: 0;
+        color: #888;
+        font-size: 0.78rem;
+        line-height: 1.5;
+    }
+
+    /* =========================
+       MESSAGES
+    ========================= */
+
+    .auth-message {
+        min-height: 20px;
+        margin: 15px 0 0;
+        text-align: center;
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+    .auth-message.error {
+        color: #ff8d8d;
+    }
+
+    .auth-message.success {
+        color: #9fe2a8;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 850px) {
+        body {
+            overflow-y: auto;
+            padding: 25px 15px;
+        }
+
+        .auth-shell {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-intro {
+            width: 100%;
+        }
+
+        .auth-intro h1,
+        .intro-copy,
+        .intro-note {
+            display: none;
+        }
+
+        .brand {
+            margin-bottom: 0;
+        }
+
+        .lamp-scene {
+            transform: scale(0.85);
+            margin-top: -15px;
+            margin-bottom: -25px;
+        }
+
+        .auth-panel {
+            width: min(100%, 380px);
+        }
+    }
+</style>
+
+
 </head>
-<body>
-    <main class="auth-shell">
-        <section class="auth-intro">
-            <a class="brand" href="/">NEXUS</a>
-            <div>
-                <p class="eyebrow">YOUR WORKSPACE, IN SYNC</p>
-                <h1>Make room for meaningful progress.</h1>
-                <p>Sign in to pick up where you left off, or create a workspace for your next big idea.</p>
+
+<body data-lamp-on="false">
+
+<main class="auth-shell">
+
+
+<section class="auth-intro">
+
+    <a class="brand" href="/">NEXUS</a>
+
+    <div class="lamp-scene" aria-label="Interactive lamp">
+
+        <div class="lamp-glow"></div>
+
+        <svg
+            class="lamp-svg"
+            viewBox="0 0 200 300"
+            xmlns="http://www.w3.org/2000/svg"
+            role="img"
+            aria-label="Interactive lamp"
+        >
+
+            <ellipse
+                class="lamp-inner-glow"
+                cx="100"
+                cy="110"
+                rx="60"
+                ry="30"
+            />
+
+            <rect
+                class="lamp-base"
+                x="92"
+                y="100"
+                width="16"
+                height="160"
+                rx="8"
+            />
+
+            <rect
+                class="lamp-base"
+                x="60"
+                y="250"
+                width="80"
+                height="12"
+                rx="6"
+            />
+
+            <g class="pull-cord">
+
+                <line
+                    class="lamp-cord"
+                    x1="130"
+                    y1="110"
+                    x2="130"
+                    y2="180"
+                />
+
+                <circle
+                    class="lamp-bead"
+                    cx="130"
+                    cy="190"
+                    r="6"
+                />
+
+                <circle
+                    id="lampCordHit"
+                    class="lamp-cord-hit"
+                    cx="130"
+                    cy="190"
+                    r="25"
+                    fill="transparent"
+                />
+
+            </g>
+
+            <path
+                class="lamp-shade"
+                d="M30 110 C30 50, 170 50, 170 110 C170 125, 30 125, 30 110 Z"
+            />
+
+        </svg>
+
+        <button
+            id="lampToggle"
+            class="lamp-toggle"
+            type="button"
+        >
+            Pull the cord to turn on the light
+        </button>
+
+    </div>
+
+    <div>
+        <p class="eyebrow">YOUR WORKSPACE, IN SYNC</p>
+
+        <h1>Make room for meaningful progress.</h1>
+
+        <p class="intro-copy">
+            Sign in to pick up where you left off, or create a workspace
+            for your next big idea.
+        </p>
+    </div>
+
+    <span class="intro-note">
+        Private by default. Built for momentum.
+    </span>
+
+</section>
+
+
+<section class="auth-panel">
+
+    <div class="auth-panel-header">
+
+        <span class="panel-kicker">
+            NEXUS ACCOUNT
+        </span>
+
+        <h2 id="authTitle">
+            Welcome back
+        </h2>
+
+        <p id="authSubtitle">
+            Sign in to open your workspace.
+        </p>
+
+    </div>
+
+
+    <div class="auth-tabs" role="tablist">
+
+        <button
+            class="auth-tab active"
+            type="button"
+            data-mode="login"
+        >
+            Sign in
+        </button>
+
+        <button
+            class="auth-tab"
+            type="button"
+            data-mode="register"
+        >
+            Create account
+        </button>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <form id="loginForm" class="auth-form">
+
+        <label>
+            Email
+
+            <input
+                id="loginEmail"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+            >
+        </label>
+
+        <label>
+            Password
+
+            <input
+                id="loginPassword"
+                type="password"
+                autocomplete="current-password"
+                placeholder="••••••••"
+                required
+            >
+        </label>
+
+        <button
+            class="auth-submit"
+            type="submit"
+        >
+            Sign in
+        </button>
+
+        <button
+            class="text-button"
+            id="forgotLink"
+            type="button"
+        >
+            Forgot password?
+        </button>
+
+    </form>
+
+
+    <!-- REGISTER -->
+
+    <form
+        id="registerForm"
+        class="auth-form hidden"
+    >
+
+        <label>
+            Your name
+
+            <input
+                id="registerName"
+                type="text"
+                autocomplete="name"
+                placeholder="Your name"
+                required
+            >
+        </label>
+
+        <label>
+            Email
+
+            <input
+                id="registerEmail"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+            >
+        </label>
+
+        <label>
+            Password
+
+            <input
+                id="registerPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="12"
+                placeholder="Create a strong password"
+                required
+            >
+        </label>
+
+        <div
+            class="password-strength"
+            aria-live="polite"
+        >
+            <div class="strength-track">
+                <span id="registerStrengthBar"></span>
             </div>
-            <span class="intro-note">Private by default. Built for momentum.</span>
-        </section>
 
-        <section class="auth-panel">
-            <div class="auth-panel-header">
-                <span class="panel-kicker">NEXUS ACCOUNT</span>
-                <h2 id="authTitle">Welcome back</h2>
-                <p id="authSubtitle">Sign in to open your workspace.</p>
+            <span id="registerStrengthText">
+                Use 12+ characters with upper/lowercase letters,
+                a number, and a symbol.
+            </span>
+        </div>
+
+        <button
+            class="auth-submit"
+            type="submit"
+        >
+            Create account
+        </button>
+
+    </form>
+
+
+    <!-- RESET -->
+
+    <form
+        id="resetForm"
+        class="auth-form hidden"
+    >
+
+        <p class="form-note">
+            Enter your account email and choose a new password.
+        </p>
+
+        <label>
+            Email
+
+            <input
+                id="resetEmail"
+                type="email"
+                autocomplete="email"
+                placeholder="you@example.com"
+                required
+            >
+        </label>
+
+        <label>
+            New password
+
+            <input
+                id="resetPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="12"
+                placeholder="Choose a new password"
+                required
+            >
+        </label>
+
+        <div
+            class="password-strength"
+            aria-live="polite"
+        >
+            <div class="strength-track">
+                <span id="resetStrengthBar"></span>
             </div>
 
-            <div class="auth-tabs" role="tablist">
-                <button class="auth-tab active" type="button" data-mode="login">Sign in</button>
-                <button class="auth-tab" type="button" data-mode="register">Create account</button>
-            </div>
+            <span id="resetStrengthText">
+                Use 12+ characters with upper/lowercase letters,
+                a number, and a symbol.
+            </span>
+        </div>
 
-            <form id="loginForm" class="auth-form">
-                <label>Email<input id="loginEmail" type="email" autocomplete="email" required></label>
-                <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
-                <button class="auth-submit" type="submit">Sign in</button>
-                <button class="text-button" id="forgotLink" type="button">Forgot password?</button>
-            </form>
+        <button
+            class="auth-submit"
+            type="submit"
+        >
+            Update password
+        </button>
 
-            <form id="registerForm" class="auth-form hidden">
-                <label>Your name<input id="registerName" type="text" autocomplete="name" required></label>
-                <label>Email<input id="registerEmail" type="email" autocomplete="email" required></label>
-                <label>Password<input id="registerPassword" type="password" autocomplete="new-password" minlength="12" required></label>
-                <div class="password-strength" aria-live="polite">
-                    <div class="strength-track"><span id="registerStrengthBar"></span></div>
-                    <span id="registerStrengthText">Use 12+ characters with upper/lowercase letters, a number, and a symbol.</span>
-                </div>
-                <button class="auth-submit" type="submit">Create account</button>
-            </form>
+        <button
+            class="text-button"
+            id="backToLogin"
+            type="button"
+        >
+            Back to sign in
+        </button>
 
-            <form id="resetForm" class="auth-form hidden">
-                <p class="form-note">Enter your account email and choose a new password.</p>
-                <label>Email<input id="resetEmail" type="email" autocomplete="email" required></label>
-                <label>New password<input id="resetPassword" type="password" autocomplete="new-password" minlength="12" required></label>
-                <div class="password-strength" aria-live="polite">
-                    <div class="strength-track"><span id="resetStrengthBar"></span></div>
-                    <span id="resetStrengthText">Use 12+ characters with upper/lowercase letters, a number, and a symbol.</span>
-                </div>
-                <button class="auth-submit" type="submit">Update password</button>
-                <button class="text-button" id="backToLogin" type="button">Back to sign in</button>
-            </form>
+    </form>
 
-            <p id="authMessage" class="auth-message" role="status"></p>
-        </section>
-    </main>
-    <script src="/js/auth.js"></script>
+
+    <p
+        id="authMessage"
+        class="auth-message"
+        role="status"
+        aria-live="polite"
+    ></p>
+
+</section>
+
+
+</main>
+
+<script src="https://unpkg.co/gsap@3/dist/gsap.min.js"></script>
+
+<script src="https://unpkg.com/gsap@3/dist/Draggable.min.js"></script>
+
+<script src="/js/auth.js"></script>
+
 </body>
 </html>
