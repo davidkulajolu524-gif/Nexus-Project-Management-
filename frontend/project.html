@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Nexus — Project</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/project.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="app-shell">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                NEXUS
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <a
+                    href="/dashboard"
+                    class="nav-item"
+                >
+                    <span>▦</span>
+                    Dashboard
+                </a>
+
+
+                <a
+                    href="/dashboard"
+                    class="nav-item active"
+                >
+                    <span>◈</span>
+                    Projects
+                </a>
+
+
+                <a
+                    href="/dashboard"
+                    class="nav-item"
+                >
+                    <span>✓</span>
+                    Tasks
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="workspace-label">
+                    Workspace
+                </div>
+
+
+                <div class="workspace-name">
+                    Personal
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- MAIN -->
+
+        <main class="main-content">
+
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <a
+                        href="/dashboard"
+                        class="back-link"
+                    >
+                        ← Back to Dashboard
+                    </a>
+
+                </div>
+
+
+                <div class="topbar-actions">
+
+                    <button
+                        id="refreshBtn"
+                        class="icon-button"
+                        title="Refresh"
+                    >
+                        ↻
+                    </button>
+
+
+                    <div class="avatar">
+                        D
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- PROJECT HEADER -->
+
+            <section
+                id="projectHeader"
+                class="project-header"
+            >
+
+                <div class="loading">
+                    Loading project...
+                </div>
+
+            </section>
+
+
+
+            <!-- PROJECT STATS -->
+
+            <section
+                id="projectStats"
+                class="stats-grid"
+            >
+
+                <div class="stat-card">
+
+                    <span>
+                        Total Tasks
+                    </span>
+
+                    <strong id="totalTasks">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span>
+                        To Do
+                    </span>
+
+                    <strong id="todoTasks">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span>
+                        In Progress
+                    </span>
+
+                    <strong id="inProgressTasks">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <span>
+                        Completed
+                    </span>
+
+                    <strong id="completedTasks">
+                        0
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- PROGRESS -->
+
+            <section class="content-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            PROGRESS
+                        </span>
+
+                        <h2>
+                            Project Progress
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-card">
+
+                    <div class="progress-info">
+
+                        <span>
+                            Completion
+                        </span>
+
+                        <strong
+                            id="progressPercentage"
+                        >
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            id="progressBar"
+                            class="progress-bar"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- TASKS -->
+
+            <section class="content-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            WORK
+                        </span>
+
+                        <h2>
+                            Project Tasks
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        id="newTaskBtn"
+                        class="primary-button"
+                    >
+                        + New Task
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="tasksContainer"
+                    class="task-board"
+                >
+
+                    <div class="loading">
+                        Loading tasks...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- TASK MODAL -->
+
+    <div
+        id="taskModal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <span class="section-label">
+                        TASK
+                    </span>
+
+                    <h2>
+                        Create Task
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="closeTaskModalBtn"
+                    class="close-button"
+                    type="button"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="taskForm">
+
+
+                <label for="taskTitle">
+                    Task title
+                </label>
+
+                <input
+                    id="taskTitle"
+                    type="text"
+                    placeholder="e.g. Build landing page"
+                    required
+                >
+
+
+                <label for="taskDescription">
+                    Description
+                </label>
+
+                <textarea
+                    id="taskDescription"
+                    placeholder="Describe the task..."
+                ></textarea>
+
+
+                <label for="taskPriority">
+                    Priority
+                </label>
+
+                <select
+                    id="taskPriority"
+                >
+
+                    <option value="low">
+                        Low
+                    </option>
+
+                    <option
+                        value="medium"
+                        selected
+                    >
+                        Medium
+                    </option>
+
+                    <option value="high">
+                        High
+                    </option>
+
+                </select>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="cancelTaskModalBtn"
+                        class="secondary-button"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Create Task
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="/js/api.js"></script>
+
+    <script src="/js/project.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Nexus project management dashboard"
+    >
+
+    <title>Nexus — Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/dashboard.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         APP
+    ====================================================== -->
+
+    <div class="app">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+
+                <div class="logo-mark">
+                    N
+                </div>
+
+                <div>
+                    <h1>Nexus</h1>
+
+                    <span>
+                        Workspace
+                    </span>
+                </div>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <a
+                    href="/dashboard"
+                    class="nav-item active"
+                >
+
+                    <span class="nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#projects"
+                    class="nav-item"
+                >
+
+                    <span class="nav-icon">
+                        ◈
+                    </span>
+
+                    <span>
+                        Projects
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#tasks"
+                    class="nav-item"
+                >
+
+                    <span class="nav-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Tasks
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <div class="workspace-card">
+
+                    <span>
+                        Workspace
+                    </span>
+
+                    <strong>
+                        Personal
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =================================================
+             MAIN
+        ================================================== -->
+
+        <main class="main">
+
+
+            <!-- =============================================
+                 TOP BAR
+            ============================================== -->
+
+            <header class="topbar">
+
+                <div class="breadcrumb">
+
+                    <span>
+                        Nexus
+                    </span>
+
+                    <span>
+                        /
+                    </span>
+
+                    <strong>
+                        Dashboard
+                    </strong>
+
+                </div>
+
+
+                <div class="topbar-actions">
+
+                    <button
+                        id="refreshBtn"
+                        class="icon-button"
+                        type="button"
+                        title="Refresh dashboard"
+                        aria-label="Refresh dashboard"
+                    >
+                        ↻
+                    </button>
+
+
+                    <button
+                        id="logoutBtn"
+                        class="icon-button logout-button"
+                        type="button"
+                        title="Sign out"
+                        aria-label="Sign out"
+                    >
+                        ⇥
+                    </button>
+
+
+                    <div
+                        class="user-avatar"
+                        title="User"
+                    >
+                        D
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =============================================
+                 DASHBOARD CONTENT
+            ============================================== -->
+
+            <div class="dashboard-content">
+
+
+                <!-- =========================================
+                     HERO
+                ========================================== -->
+
+                <section class="dashboard-hero">
+
+                    <div class="section-label">
+                        WORKSPACE
+                    </div>
+
+                    <h2>
+                        Good to see you.
+                    </h2>
+
+                    <p class="hero-description">
+                        Here's what's happening across
+                        your workspace.
+                    </p>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     STATISTICS
+                ========================================== -->
+
+                <section class="stats-grid">
+
+
+                    <!-- Projects -->
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span>
+                                Projects
+                            </span>
+
+                            <span class="stat-icon">
+                                ◈
+                            </span>
+
+                        </div>
+
+
+                        <strong id="totalProjects">
+                            0
+                        </strong>
+
+
+                        <span class="stat-description">
+                            Total projects
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Tasks -->
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span>
+                                Tasks
+                            </span>
+
+                            <span class="stat-icon">
+                                ✓
+                            </span>
+
+                        </div>
+
+
+                        <strong id="totalTasks">
+                            0
+                        </strong>
+
+
+                        <span class="stat-description">
+                            Total tasks
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- In Progress -->
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span>
+                                In Progress
+                            </span>
+
+                            <span class="stat-icon">
+                                ◌
+                            </span>
+
+                        </div>
+
+
+                        <strong id="activeProjects">
+                            0
+                        </strong>
+
+
+                        <span class="stat-description">
+                            Currently active
+                        </span>
+
+                    </article>
+
+
+
+                    <!-- Completed -->
+
+                    <article class="stat-card">
+
+                        <div class="stat-card-header">
+
+                            <span>
+                                Completed
+                            </span>
+
+                            <span class="stat-icon">
+                                ✓
+                            </span>
+
+                        </div>
+
+
+                        <strong id="completedTasks">
+                            0
+                        </strong>
+
+
+                        <span class="stat-description">
+                            Finished tasks
+                        </span>
+
+                    </article>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     PROJECTS
+                ========================================== -->
+
+                <section
+                    id="projects"
+                    class="content-section"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-label">
+                                PROJECTS
+                            </div>
+
+                            <h2>
+                                Your Projects
+                            </h2>
+
+                        </div>
+
+
+                        <button
+                            id="newProjectBtn"
+                            class="primary-button"
+                            type="button"
+                        >
+                            + New Project
+                        </button>
+
+                    </div>
+
+
+                    <!-- IMPORTANT:
+                         dashboard.js expects this ID
+                    -->
+
+                    <div
+                        id="projectsContainer"
+                        class="projects-grid"
+                    >
+
+                        <div class="loading">
+                            Loading projects...
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="productivity-strip" aria-label="Productivity summary">
+
+                    <div>
+                        <span class="section-label">TODAY</span>
+                        <strong id="productivitySummary">Loading your focus summary...</strong>
+                    </div>
+
+                    <div class="productivity-meter" aria-hidden="true">
+                        <span id="productivityMeter"></span>
+                    </div>
+
+                    <span id="dueSoonSummary" class="summary-detail"></span>
+
+                </section>
+
+
+
+                <!-- =========================================
+                     TASKS
+                ========================================== -->
+
+                <section
+                    id="tasks"
+                    class="content-section"
+                >
+
+                    <div class="section-header">
+
+                        <div>
+
+                            <div class="section-label">
+                                TASKS
+                            </div>
+
+                            <h2>
+                                Task Board
+                            </h2>
+
+                        </div>
+
+
+                        <button
+                            id="newTaskBtn"
+                            class="primary-button"
+                            type="button"
+                        >
+                            + New Task
+                        </button>
+
+                    </div>
+
+
+                    <div class="task-toolbar" role="search">
+
+                        <label class="search-field">
+                            <span aria-hidden="true">⌕</span>
+                            <input id="taskSearch" type="search" placeholder="Search tasks" autocomplete="off">
+                        </label>
+
+                        <select id="taskStatusFilter" aria-label="Filter tasks by status">
+                            <option value="all">All statuses</option>
+                            <option value="todo">To do</option>
+                            <option value="in_progress">In progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+
+                        <select id="taskPriorityFilter" aria-label="Filter tasks by priority">
+                            <option value="all">All priorities</option>
+                            <option value="high">High priority</option>
+                            <option value="medium">Medium priority</option>
+                            <option value="low">Low priority</option>
+                        </select>
+
+                        <select id="taskDueFilter" aria-label="Filter tasks by deadline">
+                            <option value="all">All deadlines</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="none">No deadline</option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- IMPORTANT:
+                         dashboard.js expects this ID
+                    -->
+
+                    <div
+                        id="tasksContainer"
+                        class="tasks-container"
+                    >
+
+                        <div class="loading">
+                            Loading tasks...
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CREATE PROJECT MODAL
+    ====================================================== -->
+
+    <div
+        id="projectModal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="projectModalTitle"
+        >
+
+            <div class="modal-header">
+
+                <div>
+
+                    <div class="section-label">
+                        PROJECT
+                    </div>
+
+                    <h2 id="projectModalTitle">
+                        Create Project
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="closeModalBtn"
+                    class="modal-close"
+                    type="button"
+                    aria-label="Close project modal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                id="projectForm"
+                class="modal-form"
+            >
+
+
+                <!-- Project name -->
+
+                <div class="form-group">
+
+                    <label for="projectName">
+                        Project name
+                    </label>
+
+                    <input
+                        id="projectName"
+                        name="projectName"
+                        type="text"
+                        placeholder="e.g. Nexus Website"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Description -->
+
+                <div class="form-group">
+
+                    <label for="projectDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="projectDescription"
+                        name="projectDescription"
+                        placeholder="What is this project about?"
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- Color -->
+
+                <div class="form-group">
+
+                    <label for="projectColor">
+                        Project color
+                    </label>
+
+                    <input
+                        id="projectColor"
+                        name="projectColor"
+                        type="color"
+                        value="#4f46e5"
+                    >
+
+                </div>
+
+
+
+                <!-- Actions -->
+
+                <div class="modal-actions">
+
+                    <button
+                        id="cancelModalBtn"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        class="primary-button"
+                        type="submit"
+                    >
+                        Create Project
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CREATE TASK MODAL
+    ====================================================== -->
+
+    <div
+        id="taskModal"
+        class="modal hidden"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="taskModalTitle"
+        >
+
+            <div class="modal-header">
+
+                <div>
+
+                    <div class="section-label">
+                        TASK
+                    </div>
+
+                    <h2 id="taskModalTitle">
+                        Create Task
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="closeTaskModalBtn"
+                    class="modal-close"
+                    type="button"
+                    aria-label="Close task modal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                id="taskForm"
+                class="modal-form"
+            >
+
+
+                <!-- Project -->
+
+                <div class="form-group">
+
+                    <label for="taskProject">
+                        Project
+                    </label>
+
+                    <select
+                        id="taskProject"
+                        name="taskProject"
+                        required
+                    >
+
+                        <option value="">
+                            Select a project
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Task title -->
+
+                <div class="form-group">
+
+                    <label for="taskTitle">
+                        Task title
+                    </label>
+
+                    <input
+                        id="taskTitle"
+                        name="taskTitle"
+                        type="text"
+                        placeholder="e.g. Build dashboard"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Description -->
+
+                <div class="form-group">
+
+                    <label for="taskDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="taskDescription"
+                        name="taskDescription"
+                        placeholder="Describe what needs to be done..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="taskDueDate">
+                        Due date
+                    </label>
+
+                    <input
+                        id="taskDueDate"
+                        name="taskDueDate"
+                        type="date"
+                    >
+
+                </div>
+
+
+
+                <!-- Priority -->
+
+                <div class="form-group">
+
+                    <label for="taskPriority">
+                        Priority
+                    </label>
+
+                    <select
+                        id="taskPriority"
+                        name="taskPriority"
+                    >
+
+                        <option value="low">
+                            Low
+                        </option>
+
+                        <option
+                            value="medium"
+                            selected
+                        >
+                            Medium
+                        </option>
+
+                        <option value="high">
+                            High
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Actions -->
+
+                <div class="modal-actions">
+
+                    <button
+                        id="cancelTaskModalBtn"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        class="primary-button"
+                        type="submit"
+                    >
+                        Create Task
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="/js/api.js"
+    ></script>
+
+    <script
+        src="/js/dashboard.js"
+    ></script>
+
+
+</body>
+
+</html>

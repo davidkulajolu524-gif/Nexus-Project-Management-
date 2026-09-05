@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Account</title>
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+    <main class="auth-shell">
+        <section class="auth-intro">
+            <a class="brand" href="/">NEXUS</a>
+            <div>
+                <p class="eyebrow">YOUR WORKSPACE, IN SYNC</p>
+                <h1>Make room for meaningful progress.</h1>
+                <p>Sign in to pick up where you left off, or create a workspace for your next big idea.</p>
+            </div>
+            <span class="intro-note">Private by default. Built for momentum.</span>
+        </section>
+
+        <section class="auth-panel">
+            <div class="auth-panel-header">
+                <span class="panel-kicker">NEXUS ACCOUNT</span>
+                <h2 id="authTitle">Welcome back</h2>
+                <p id="authSubtitle">Sign in to open your workspace.</p>
+            </div>
+
+            <div class="auth-tabs" role="tablist">
+                <button class="auth-tab active" type="button" data-mode="login">Sign in</button>
+                <button class="auth-tab" type="button" data-mode="register">Create account</button>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <label>Email<input id="loginEmail" type="email" autocomplete="email" required></label>
+                <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+                <button class="auth-submit" type="submit">Sign in</button>
+                <button class="text-button" id="forgotLink" type="button">Forgot password?</button>
+            </form>
+
+            <form id="registerForm" class="auth-form hidden">
+                <label>Your name<input id="registerName" type="text" autocomplete="name" required></label>
+                <label>Email<input id="registerEmail" type="email" autocomplete="email" required></label>
+                <label>Password<input id="registerPassword" type="password" autocomplete="new-password" minlength="12" required></label>
+                <div class="password-strength" aria-live="polite">
+                    <div class="strength-track"><span id="registerStrengthBar"></span></div>
+                    <span id="registerStrengthText">Use 12+ characters with upper/lowercase letters, a number, and a symbol.</span>
+                </div>
+                <button class="auth-submit" type="submit">Create account</button>
+            </form>
+
+            <form id="resetForm" class="auth-form hidden">
+                <p class="form-note">Enter your account email and choose a new password.</p>
+                <label>Email<input id="resetEmail" type="email" autocomplete="email" required></label>
+                <label>New password<input id="resetPassword" type="password" autocomplete="new-password" minlength="12" required></label>
+                <div class="password-strength" aria-live="polite">
+                    <div class="strength-track"><span id="resetStrengthBar"></span></div>
+                    <span id="resetStrengthText">Use 12+ characters with upper/lowercase letters, a number, and a symbol.</span>
+                </div>
+                <button class="auth-submit" type="submit">Update password</button>
+                <button class="text-button" id="backToLogin" type="button">Back to sign in</button>
+            </form>
+
+            <p id="authMessage" class="auth-message" role="status"></p>
+        </section>
+    </main>
+    <script src="/js/auth.js"></script>
+</body>
+</html>

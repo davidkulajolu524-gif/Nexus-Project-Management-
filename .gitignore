@@ -1,0 +1,16 @@
+# Local databases and runtime files
+*.db
+*.db-shm
+*.db-wal
+__pycache__/
+*.py[cod]
+
+# Python tooling
+.venv/
+.pytest_cache/
+.coverage
+
+# Editor and OS files
+.idea/
+.DS_Store
+Thumbs.db
