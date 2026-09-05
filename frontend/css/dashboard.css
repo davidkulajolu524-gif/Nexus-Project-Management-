@@ -1170,3 +1170,107 @@ a {
         grid-column: 1 / -1;
     }
 }
+
+/* =========================================================
+   NEXUS AMBIENT DASHBOARD BACKGROUND
+   ========================================================= */
+
+body {
+    position: relative;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(99, 102, 241, 0.10),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(139, 92, 246, 0.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 55% 90%,
+            rgba(59, 130, 246, 0.06),
+            transparent 35%
+        ),
+        #f7f7f5;
+}
+
+/* Soft atmospheric glow */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+
+    background:
+        radial-gradient(
+            circle at 25% 35%,
+            rgba(79, 70, 229, 0.045),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 75% 65%,
+            rgba(124, 58, 237, 0.04),
+            transparent 30%
+        );
+
+    filter: blur(40px);
+}
+
+/* Very subtle technical grid */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+
+    background-image:
+        linear-gradient(
+            rgba(23, 23, 23, 0.018) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(23, 23, 23, 0.018) 1px,
+            transparent 1px
+        );
+
+    background-size: 42px 42px;
+
+    mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 85%
+    );
+}
+
+/* Keep the main workspace slightly elevated */
+.main {
+    position: relative;
+}
+
+/* Give cards a little more depth against the new background */
+.stat-card,
+.project-card,
+.task-row,
+.task-card {
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.025);
+}
+
+.stat-card:hover,
+.project-card:hover,
+.task-card:hover {
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, 0.07);
+}
+
+/* Slightly soften the sidebar */
+.sidebar {
+    box-shadow:
+        4px 0 24px rgba(0, 0, 0, 0.025);
+}
