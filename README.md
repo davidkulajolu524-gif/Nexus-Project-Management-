@@ -14,6 +14,8 @@ uv run uvicorn app.main:app --host 0.0.0.0 --port 8001
 
 Open [http://localhost:8001](http://localhost:8001). The API documentation is available at [http://localhost:8001/docs](http://localhost:8001/docs).
 
+Project invitations use SMTP. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, `SMTP_USER`, and `SMTP_PASSWORD` before starting the server. Set `APP_BASE_URL` when the app is not running at `http://localhost:8001`.
+
 ## Included features
 
 - Account creation and sign-in

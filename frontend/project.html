@@ -138,6 +138,19 @@
             </section>
 
 
+            <nav class="workspace-tabs" aria-label="Project workspace">
+
+                <button class="workspace-tab active" type="button" data-view="overview">Overview</button>
+                <button class="workspace-tab" type="button" data-view="tasks">Tasks</button>
+                <button class="workspace-tab" type="button" data-view="calendar">Calendar</button>
+                <button class="workspace-tab" type="button" data-view="members">Members</button>
+                <button class="workspace-tab" type="button" data-view="files">Files</button>
+
+            </nav>
+
+
+            <div class="workspace-view active" data-view-panel="overview">
+
 
             <!-- PROJECT STATS -->
 
@@ -253,10 +266,53 @@
             </section>
 
 
+            <div class="workspace-grid">
+
+                <section class="workspace-card">
+                    <span class="section-label">PROJECT INFORMATION</span>
+                    <h2>Project information</h2>
+                    <dl class="project-information">
+                        <div>
+                            <dt>Status</dt>
+                            <dd id="projectInfoStatus">Active</dd>
+                        </div>
+                        <div>
+                            <dt>Tasks</dt>
+                            <dd id="projectInfoTasks">0 total</dd>
+                        </div>
+                        <div>
+                            <dt>Completion</dt>
+                            <dd id="projectInfoProgress">0%</dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <section class="workspace-card">
+                    <span class="section-label">UP NEXT</span>
+                    <h2>Deadlines</h2>
+                    <div id="deadlineList" class="activity-list">
+                        <p class="empty-state">No deadlines scheduled.</p>
+                    </div>
+                </section>
+
+            </div>
+
+
+            <section class="workspace-card activity-card">
+                <span class="section-label">RECENT WORK</span>
+                <h2>Activity</h2>
+                <div id="activityList" class="activity-list">
+                    <p class="empty-state">Activity will appear as work changes.</p>
+                </div>
+            </section>
+
+            </div>
+
+
 
             <!-- TASKS -->
 
-            <section class="content-section">
+            <section id="tasksView" class="content-section workspace-view" data-view-panel="tasks">
 
                 <div class="section-header">
 
@@ -294,6 +350,63 @@
 
                 </div>
 
+            </section>
+
+
+            <section class="workspace-view calendar-view" data-view-panel="calendar">
+                <div class="calendar-toolbar">
+                    <div>
+                        <span class="section-label">DEADLINES</span>
+                        <h2 id="calendarMonth">Project calendar</h2>
+                    </div>
+                    <div class="calendar-actions">
+                        <button id="calendarTodayBtn" class="secondary-button" type="button">Today</button>
+                        <button id="calendarPreviousBtn" class="icon-button" type="button" aria-label="Previous month">←</button>
+                        <button id="calendarNextBtn" class="icon-button" type="button" aria-label="Next month">→</button>
+                    </div>
+                </div>
+                <div id="calendarGrid" class="calendar-grid" aria-live="polite"></div>
+            </section>
+
+
+            <section class="workspace-view workspace-resource-view" data-view-panel="members">
+                <div class="resource-toolbar">
+                    <div>
+                        <span class="section-label">COLLABORATION</span>
+                        <h2>Project members</h2>
+                    </div>
+                    <form id="memberForm" class="inline-form">
+                        <input id="memberEmail" type="email" placeholder="teammate@example.com" aria-label="Member email" required>
+                        <select id="memberRole" aria-label="Member role">
+                            <option value="member">Member</option>
+                            <option value="editor">Editor</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <button class="primary-button" type="submit">Invite member</button>
+                    </form>
+                </div>
+                <p id="memberStatus" class="resource-note" aria-live="polite"></p>
+                <div id="membersList" class="resource-list">
+                    <p class="loading">Loading members...</p>
+                </div>
+            </section>
+
+
+            <section class="workspace-view workspace-resource-view" data-view-panel="files">
+                <div class="resource-toolbar">
+                    <div>
+                        <span class="section-label">SHARED ASSETS</span>
+                        <h2>Project files</h2>
+                    </div>
+                    <label class="primary-button file-upload-button">
+                        Upload file
+                        <input id="fileUpload" type="file" aria-label="Upload project file">
+                    </label>
+                </div>
+                <p class="resource-note">Files up to 10 MB can be shared with this project.</p>
+                <div id="filesList" class="resource-list">
+                    <p class="loading">Loading files...</p>
+                </div>
             </section>
 
 
@@ -420,9 +533,9 @@
 
 
 
-    <script src="/js/api.js"></script>
+    <script src="/js/api.js?v=6"></script>
 
-    <script src="/js/project.js"></script>
+    <script src="/js/project.js?v=6"></script>
 
 </body>
 

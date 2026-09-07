@@ -11,6 +11,7 @@ from . import models
 from .routes.projects import router as projects_router
 from .routes.tasks import router as tasks_router
 from .routes.auth import router as auth_router
+from .routes.workspace import router as workspace_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -27,6 +28,7 @@ app = FastAPI(
 app.include_router(projects_router)
 app.include_router(tasks_router)
 app.include_router(auth_router)
+app.include_router(workspace_router)
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -62,7 +64,11 @@ def dashboard(request: Request):
 @app.get("/project/{project_id}")
 def project_page(project_id: int, request: Request):
     if not request.cookies.get(SESSION_COOKIE):
-        return RedirectResponse("/auth")
+        invite = request.query_params.get("invite")
+        destination = f"/project/{project_id}"
+        if invite:
+            destination += f"?invite={invite}"
+        return RedirectResponse(f"/auth?next={destination}")
     return FileResponse(FRONTEND_DIR / "project.html")
 
 

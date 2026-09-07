@@ -78,6 +78,35 @@ class ProjectResponse(BaseModel):
     }
 
 
+class ProjectMemberCreate(BaseModel):
+    email: str = Field(min_length=3, max_length=255)
+    role: str = Field(default="member", min_length=1, max_length=30)
+
+
+class ProjectInvitationCreate(ProjectMemberCreate):
+    pass
+
+
+class ProjectMemberResponse(BaseModel):
+    id: int
+    project_id: int
+    user_id: int
+    name: str
+    email: str
+    role: str
+    created_at: datetime
+
+
+class ProjectFileResponse(BaseModel):
+    id: int
+    project_id: int
+    filename: str
+    content_type: str | None
+    size: int
+    uploaded_by: int
+    created_at: datetime
+
+
 class TaskCreate(BaseModel):
     project_id: int
 

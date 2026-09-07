@@ -2,14 +2,19 @@ const API_BASE = "/";
 
 
 async function apiRequest(endpoint, options = {}) {
+    const headers = {
+        ...(options.headers || {})
+    };
+
+    if (!(options.body instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
+    }
+
     const response = await fetch(
         `${API_BASE}${endpoint}`,
         {
-            headers: {
-                "Content-Type": "application/json",
-                ...(options.headers || {})
-            },
-            ...options
+            ...options,
+            headers
         }
     );
 
@@ -118,5 +123,68 @@ async function deleteTask(taskId) {
         {
             method: "DELETE"
         }
+    );
+}
+
+
+/* =========================
+   PROJECT WORKSPACE
+========================= */
+
+async function getProjectMembers(projectId) {
+    return apiRequest(`projects/${projectId}/members`);
+}
+
+
+async function addProjectMember(projectId, member) {
+    return apiRequest(
+        `projects/${projectId}/members/invite`,
+        {
+            method: "POST",
+            body: JSON.stringify(member)
+        }
+    );
+}
+
+
+async function acceptProjectInvitation(projectId, token) {
+    return apiRequest(
+        `projects/${projectId}/invitations/${encodeURIComponent(token)}/accept`,
+        { method: "POST" }
+    );
+}
+
+
+async function deleteProjectMember(projectId, memberId) {
+    return apiRequest(
+        `projects/${projectId}/members/${memberId}`,
+        { method: "DELETE" }
+    );
+}
+
+
+async function getProjectFiles(projectId) {
+    return apiRequest(`projects/${projectId}/files`);
+}
+
+
+async function uploadProjectFile(projectId, file) {
+    const formData = new FormData();
+    formData.append("upload", file);
+
+    return apiRequest(
+        `projects/${projectId}/files`,
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+}
+
+
+async function deleteProjectFile(projectId, fileId) {
+    return apiRequest(
+        `projects/${projectId}/files/${fileId}`,
+        { method: "DELETE" }
     );
 }

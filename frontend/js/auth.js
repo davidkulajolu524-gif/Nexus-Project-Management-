@@ -34,6 +34,13 @@ function showMessage(message, type = "") {
     authMessage.className = `auth-message ${type}`;
 }
 
+function getPostAuthDestination() {
+    const destination = new URLSearchParams(window.location.search).get("next");
+    return destination && destination.startsWith("/")
+        ? destination
+        : "/dashboard";
+}
+
 function toggleLamp() {
     const isOn = document.body.dataset.lampOn === "true";
     document.body.dataset.lampOn = String(!isOn);
@@ -74,7 +81,7 @@ loginForm.addEventListener("submit", async event => {
             email: document.getElementById("loginEmail").value,
             password: document.getElementById("loginPassword").value
         });
-        window.location.href = "/dashboard";
+        window.location.href = getPostAuthDestination();
     } catch (error) {
         showMessage(error.message, "error");
     }
@@ -93,7 +100,7 @@ registerForm.addEventListener("submit", async event => {
             email: document.getElementById("registerEmail").value,
             password: registerPassword
         });
-        window.location.href = "/dashboard";
+        window.location.href = getPostAuthDestination();
     } catch (error) {
         showMessage(error.message, "error");
     }
