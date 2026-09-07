@@ -519,55 +519,31 @@ function openProject(projectId) {
 ========================================================= */
 
 function renderTasks() {
-
-    if (!tasksContainer) {
-        return;
-    }
-
+    if (!tasksContainer) return;
 
     const visibleTasks = getVisibleTasks();
 
     if (tasks.length === 0) {
-
         tasksContainer.innerHTML = `
-
             <div class="loading">
-
-                <p>
-                    No tasks yet.
-                </p>
-
-                <button
-                    type="button"
-                    class="primary-button"
-                    id="emptyTaskBtn"
-                >
+                <p>No tasks yet.</p>
+                <button type="button" class="primary-button" id="emptyTaskBtn">
                     Create your first task
                 </button>
-
             </div>
-
         `;
 
-
         const emptyTaskBtn =
-            document.getElementById(
-                "emptyTaskBtn"
-            );
-
+            document.getElementById("emptyTaskBtn");
 
         if (emptyTaskBtn) {
-
             emptyTaskBtn.addEventListener(
                 "click",
                 openTaskModal
             );
-
         }
 
-
         return;
-
     }
 
     if (visibleTasks.length === 0) {
@@ -576,21 +552,71 @@ function renderTasks() {
                 No tasks match these filters.
             </div>
         `;
+
         return;
     }
 
+    const columns = [
+        {
+            status: "todo",
+            title: "To Do"
+        },
+        {
+            status: "in_progress",
+            title: "In Progress"
+        },
+        {
+            status: "completed",
+            title: "Completed"
+        }
+    ];
 
-    tasksContainer.innerHTML =
-        visibleTasks
-            .map(
-                task =>
-                    createTaskRow(task)
-            )
-            .join("");
+    tasksContainer.innerHTML = `
+        <div class="kanban-board">
+            ${columns.map(column => {
 
+                const columnTasks =
+                    visibleTasks.filter(
+                        task =>
+                            (task.status || "todo") ===
+                            column.status
+                    );
 
-    attachTaskStatusListeners();
+                return `
+                    <div class="task-column">
+                        <div class="task-column-header">
+                            <div class="task-column-title">
+                                ${column.title}
+                            </div>
 
+                            <div class="task-column-count">
+                                ${columnTasks.length}
+                            </div>
+                        </div>
+
+                        <div
+                            class="task-column-list kanban-drop-zone"
+                            data-status="${column.status}"
+                        >
+                            ${
+                                columnTasks.length
+                                    ? columnTasks
+                                        .map(createKanbanTaskCard)
+                                        .join("")
+                                    : `
+                                        <div class="kanban-empty">
+                                            Drop a task here
+                                        </div>
+                                    `
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join("")}
+        </div>
+    `;
+
+    attachKanbanListeners();
 }
 
 
@@ -636,9 +662,7 @@ function getVisibleTasks() {
 /* =========================================================
    TASK ROW
 ========================================================= */
-
-function createTaskRow(task) {
-
+function createKanbanTaskCard(task) {
     const project =
         projects.find(
             project =>
@@ -646,15 +670,10 @@ function createTaskRow(task) {
                 Number(task.project_id)
         );
 
-
     const projectName =
         project
             ? project.name
             : "Unknown project";
-
-
-    const status =
-        task.status || "todo";
 
     const dueLabel =
         task.due_date
@@ -662,114 +681,239 @@ function createTaskRow(task) {
             : "No deadline";
 
     const dueClass =
-        isOverdue(task) ? " task-overdue" : "";
-
+        isOverdue(task)
+            ? " task-overdue"
+            : "";
 
     return `
-
-        <div
-            class="task-row${dueClass}"
+        <article
+            class="task-card${dueClass}"
             data-task-id="${task.id}"
+            draggable="true"
         >
-
-            <div>
-
-                <div class="task-title">
-
-                    ${escapeHTML(
-                        task.title
-                    )}
-
-                </div>
-
-
-                <div class="task-description">
-
-                    ${escapeHTML(
-                        task.description ||
-                        "No description"
-                    )}
-
-                </div>
-
+            <div class="task-card-title">
+                ${escapeHTML(task.title)}
             </div>
 
-
-            <div>
-
-                <div
-                    style="
-                        color:#737373;
-                        font-size:0.75rem;
-                        margin-bottom:6px;
-                    "
-                >
-
-                    ${escapeHTML(
-                        projectName
-                    )}
-
-                </div>
-
-
-                <select
-                    class="task-status-select"
-                    data-task-id="${task.id}"
-                    aria-label="Change task status"
-                >
-
-                    <option
-                        value="todo"
-                        ${status === "todo"
-                            ? "selected"
-                            : ""}
-                    >
-                        Todo
-                    </option>
-
-
-                    <option
-                        value="in_progress"
-                        ${status === "in_progress"
-                            ? "selected"
-                            : ""}
-                    >
-                        In Progress
-                    </option>
-
-
-                    <option
-                        value="completed"
-                        ${status === "completed"
-                            ? "selected"
-                            : ""}
-                    >
-                        Completed
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="task-priority">
-
+            <div class="task-card-description">
                 ${escapeHTML(
-                    formatStatus(
-                        task.priority ||
-                        "medium"
-                    )
+                    task.description ||
+                    "No description"
                 )}
+            </div>
+
+            <div class="task-project">
+                ${escapeHTML(projectName)}
+            </div>
+
+            <div class="task-meta">
+
+                <span class="task-priority">
+                    ${escapeHTML(
+                        formatStatus(
+                            task.priority || "medium"
+                        )
+                    )}
+                </span>
+
+                <span class="task-due-date">
+                    ${escapeHTML(dueLabel)}
+                </span>
 
             </div>
 
-            <div class="task-due-date">
-                ${escapeHTML(dueLabel)}
-            </div>
+            <select
+                class="task-status-select"
+                data-task-id="${task.id}"
+                aria-label="Change task status"
+            >
+                <option
+                    value="todo"
+                    ${task.status === "todo" ? "selected" : ""}
+                >
+                    To Do
+                </option>
 
-        </div>
+                <option
+                    value="in_progress"
+                    ${task.status === "in_progress" ? "selected" : ""}
+                >
+                    In Progress
+                </option>
 
+                <option
+                    value="completed"
+                    ${task.status === "completed" ? "selected" : ""}
+                >
+                    Completed
+                </option>
+            </select>
+        </article>
     `;
+}
+
+
+/* =========================================================
+   KANBAN DRAG AND DROP
+========================================================= */
+
+function attachKanbanListeners() {
+
+    const cards =
+        document.querySelectorAll(
+            ".task-card[draggable='true']"
+        );
+
+    cards.forEach(card => {
+
+        card.addEventListener(
+            "dragstart",
+            event => {
+
+                const taskId =
+                    card.dataset.taskId;
+
+                event.dataTransfer.setData(
+                    "text/plain",
+                    taskId
+                );
+
+                event.dataTransfer.effectAllowed =
+                    "move";
+
+                card.classList.add(
+                    "dragging"
+                );
+            }
+        );
+
+        card.addEventListener(
+            "dragend",
+            () => {
+
+                card.classList.remove(
+                    "dragging"
+                );
+
+                document
+                    .querySelectorAll(
+                        ".kanban-drop-zone"
+                    )
+                    .forEach(zone => {
+                        zone.classList.remove(
+                            "drag-over"
+                        );
+                    });
+            }
+        );
+
+    });
+
+
+    document
+        .querySelectorAll(
+            ".kanban-drop-zone"
+        )
+        .forEach(zone => {
+
+            zone.addEventListener(
+                "dragover",
+                event => {
+
+                    event.preventDefault();
+
+                    event.dataTransfer.dropEffect =
+                        "move";
+
+                    zone.classList.add(
+                        "drag-over"
+                    );
+                }
+            );
+
+
+            zone.addEventListener(
+                "dragleave",
+                event => {
+
+                    /*
+                     * Only remove the highlight when
+                     * the pointer actually leaves the
+                     * drop zone.
+                     */
+
+                    if (
+                        !zone.contains(
+                            event.relatedTarget
+                        )
+                    ) {
+                        zone.classList.remove(
+                            "drag-over"
+                        );
+                    }
+                }
+            );
+
+
+            zone.addEventListener(
+                "drop",
+                async event => {
+
+                    event.preventDefault();
+
+                    zone.classList.remove(
+                        "drag-over"
+                    );
+
+                    const taskId =
+                        Number(
+                            event.dataTransfer.getData(
+                                "text/plain"
+                            )
+                        );
+
+                    const newStatus =
+                        zone.dataset.status;
+
+                    if (
+                        !taskId ||
+                        !newStatus
+                    ) {
+                        return;
+                    }
+
+                    const task =
+                        tasks.find(
+                            item =>
+                                Number(item.id) ===
+                                Number(taskId)
+                        );
+
+                    if (!task) {
+                        return;
+                    }
+
+                    /*
+                     * Don't send an unnecessary
+                     * request if the task was dropped
+                     * into its current column.
+                     */
+
+                    if (
+                        (task.status || "todo") ===
+                        newStatus
+                    ) {
+                        return;
+                    }
+
+                    await changeTaskStatus(
+                        taskId,
+                        newStatus
+                    );
+                }
+            );
+
+        });
 
 }
 
@@ -932,23 +1076,14 @@ async function changeTaskStatus(
 
 
         /*
-         * Do NOT call renderTasks().
-         *
-         * The existing select already has
-         * the correct value.
+         * Re-render the Kanban board so the task
+         * moves into its new column immediately.
          */
+        renderTasks();
 
         showMessage(
             "Task status updated successfully."
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Could not update task status:",
-            error
-        );
+      );
 
 
         /*
